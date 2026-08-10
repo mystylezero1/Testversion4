@@ -1,4 +1,4 @@
-// First-Name Live Search with Fuzzy Matching & Disambiguation Popup
+// Vornamen-Suche mit Mehrfachauswahl-Popup
 export class SearchModule {
   constructor(guests, onSelectGuest) {
     this.guests = guests;
@@ -27,7 +27,7 @@ export class SearchModule {
 
     if (query.length < 1) return;
 
-    // Filter matching first names
+    // Filter auf Vornamen
     const matches = this.guests.filter(g => 
       g.firstName.toLowerCase().startsWith(query) ||
       g.firstName.toLowerCase().includes(query)
@@ -36,8 +36,6 @@ export class SearchModule {
     matches.forEach(guest => {
       const item = document.createElement('div');
       item.className = 'result-item';
-      
-      const displayName = `${guest.firstName} ${guest.lastNameInitial || ''}`.trim();
       item.innerHTML = `<span><strong>${guest.firstName}</strong> ${guest.lastNameInitial || ''}</span> <small style="color:#888;">Suchen</small>`;
       
       item.addEventListener('click', () => this.processSelection(guest.firstName));
@@ -48,11 +46,9 @@ export class SearchModule {
   processSelection(firstName) {
     this.resultsContainer.innerHTML = '';
     
-    // Find all guests matching this exact first name
     const matches = this.guests.filter(g => g.firstName.toLowerCase() === firstName.toLowerCase());
 
     if (matches.length > 1) {
-      // Disambiguation needed for identical first names
       this.showDisambiguationModal(matches);
     } else if (matches.length === 1) {
       this.input.value = `${matches[0].firstName} ${matches[0].lastNameInitial || ''}`.trim();
