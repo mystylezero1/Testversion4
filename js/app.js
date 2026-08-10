@@ -35,8 +35,16 @@ class WeddingApp {
       const jsonData = await res.json();
       this.data.tables = jsonData.tables;
       
-      const savedGuests = localStorage.getItem('wedding_guests_custom');
-      this.data.guests = savedGuests ? JSON.parse(savedGuests) : jsonData.guests;
+      const savedGuestsRaw = localStorage.getItem('wedding_guests_custom');
+      let savedGuests = savedGuestsRaw ? JSON.parse(savedGuestsRaw) : null;
+
+      // Automatische Bereinigung: Falls noch alte Platzhalter-Daten im Browser liegen, zurücksetzen
+      if (savedGuests && savedGuests.some(g => g.firstName === "Gast 1" || g.firstName === "Gast")) {
+        localStorage.removeItem('wedding_guests_custom');
+        savedGuests = null;
+      }
+
+      this.data.guests = savedGuests ? savedGuests : jsonData.guests;
     } catch (e) {
       console.error("Fehler beim Laden von data.json", e);
     }
