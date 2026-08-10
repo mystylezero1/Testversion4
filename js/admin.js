@@ -9,7 +9,7 @@ export class AdminModule {
   }
 
   init() {
-    // Secret URL Parameter check (?admin=true)
+    // Geheimer URL-Parameter Check (?admin=true)
     const urlParams = new URLSearchParams(window.location.search);
     const isAdminUrl = urlParams.get(CONFIG.adminUrlParam) === CONFIG.adminUrlValue;
 
