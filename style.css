@@ -416,7 +416,7 @@ body {
 
 .hidden { display: none !important; }
 
-/* Responsive adjustments */
+/* Responsive Adjustments */
 @media (max-width: 600px) {
   .header h1 { font-size: 1.8rem; }
   .map-viewport { height: 380px; }
