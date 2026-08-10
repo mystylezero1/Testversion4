@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Hochzeits-Sitzplan Anja & Dino</title>
   <link rel="stylesheet" href="style.css">
-  <!-- SheetJS Library for Excel Import/Export -->
+  <!-- SheetJS Library für Excel Import/Export -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-  <!-- Fullscreen Canvas for Confetti & Visual Effects -->
+  <!-- Fullscreen Canvas für Konfetti & Partikel-Effekte -->
   <canvas id="animation-canvas"></canvas>
 
   <!-- Header Banner -->
@@ -19,13 +19,13 @@
       <h1 id="app-title">Anja & Dino</h1>
       <p id="app-subtitle">Herzlich willkommen zu unserer Hochzeit!</p>
     </div>
-    <!-- Secret Admin Button (Visible only if ?admin=true) -->
+    <!-- Geheimer Admin-Button (Nur sichtbar wenn ?admin=true) -->
     <button id="admin-trigger-btn" class="btn-icon hidden" title="Admin Konsole">🔒</button>
   </header>
 
   <main class="main-container">
     
-    <!-- Welcome & Search Section -->
+    <!-- Willkommens- & Such-Bereich -->
     <section id="welcome-section" class="card">
       <div class="welcome-text">
         <h2>Finde deinen Sitzplatz</h2>
@@ -38,7 +38,7 @@
       </div>
     </section>
 
-    <!-- Floorplan & Table Viewport -->
+    <!-- Saalplan & Tisch-Viewport -->
     <section id="map-section" class="card map-card">
       <div class="map-header">
         <div class="guest-highlight-info">
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <!-- Action Footer: Photo Album & Guestbook -->
+      <!-- Action Footer: Fotobox-Link & Gästebuch -->
       <div class="action-footer">
         <a id="photo-link" href="https://photos.google.com" target="_blank" class="btn-gold">📷 Hochzeitsfotos teilen</a>
         <button id="guestbook-open-btn" class="btn-creme">📝 Nachricht hinterlassen</button>
@@ -67,7 +67,7 @@
 
   </main>
 
-  <!-- Dialog for Name Disambiguation (Multiple Same Names) -->
+  <!-- Dialog bei doppelten Vornamen -->
   <dialog id="disambiguation-dialog" class="modal">
     <h3>Mehrere Personen gefunden</h3>
     <p>Bitte wähle deinen genauen Eintrag aus:</p>
@@ -75,7 +75,7 @@
     <button id="disambiguation-close-btn" class="btn-secondary" style="margin-top:1rem; width:100%;">Schließen</button>
   </dialog>
 
-  <!-- Guestbook Modal -->
+  <!-- Gästebuch Modal -->
   <dialog id="guestbook-dialog" class="modal">
     <h3>❤️ Nachricht für Anja & Dino</h3>
     <form id="guestbook-form">
@@ -94,7 +94,7 @@
     </form>
   </dialog>
 
-  <!-- Desktop Admin Console Modal -->
+  <!-- Desktop Admin-Konsole Modal -->
   <dialog id="admin-dialog" class="modal modal-large">
     <div class="admin-header">
       <h3>🔒 Admin Konsole (Anja & Dino)</h3>
@@ -127,14 +127,14 @@
             </tr>
           </thead>
           <tbody id="admin-guest-tbody">
-            <!-- Dynamic Admin Rows -->
+            <!-- Dynamische Zeilen -->
           </tbody>
         </table>
       </div>
     </div>
   </dialog>
 
-  <!-- Application Logic Modules -->
+  <!-- Anwendungslogik -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
