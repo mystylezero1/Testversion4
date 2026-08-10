@@ -83,19 +83,19 @@ class WeddingApp {
     const table = this.data.tables.find(t => t.id === guest.tableId);
     if (!table) return;
 
-    // 1. Highlight info text
+    // 1. Highlight Info-Text
     const guestName = `${guest.firstName} ${guest.lastNameInitial || ''}`.trim();
     const tableName = table.name;
     document.getElementById('target-guest-info').innerText = `${guestName} ➔ ${tableName}`;
     document.getElementById('target-seat-info').innerText = `Dein Sitzplatz ist Nummer ${guest.seat}`;
 
-    // 2. Focus & Pulse Table
+    // 2. Tisch fokussieren und aufleuchten lassen
     this.focusTable(table);
 
-    // 3. Canvas Confetti
+    // 3. Canvas Konfetti
     this.animationEngine.triggerConfetti();
 
-    // 4. Voice Greeting
+    // 4. Voice Begrüßung
     speakGreeting(guest.firstName, tableName, guest.seat);
   }
 
@@ -107,7 +107,7 @@ class WeddingApp {
       targetMarker.classList.add('highlight');
     }
 
-    // Gentle zoom to table
+    // Zoom zum Tisch
     const container = document.getElementById('map-container');
     const scale = 1.6;
     const translateX = (50 - table.x) * (scale / 1.8);
