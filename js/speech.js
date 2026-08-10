@@ -1,4 +1,4 @@
-// Voice Greeting and Random Hochzeits-Sprüche
+// Voice Begrüßung und Sprüche Generator
 const ANNOUNCEMENTS = [
   "Ab auf die Tanzfläche!",
   "Zeit für ein Kaltgetränk an der Bar!",
@@ -19,7 +19,7 @@ export function speakGreeting(guestName, tableName, seatNumber) {
   utterance.rate = 0.95;
   utterance.pitch = 1.0;
 
-  window.speechSynthesis.cancel(); // Stop current speech
+  window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
 }
 
