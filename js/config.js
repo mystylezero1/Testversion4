@@ -6,7 +6,7 @@ export const CONFIG = {
   welcomeTitle: "Herzlich willkommen zur Hochzeit von Anja & Dino!",
   welcomeSubtitle: "Schön, dass du da bist. Finde hier deinen Sitzplatz!",
   
-  // Option 2: Geheimer URL-Parameter (?admin=true)
+  // Geheimer URL-Parameter (?admin=true)
   adminUrlParam: "admin",
   adminUrlValue: "true",
   
