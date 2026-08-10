@@ -39,7 +39,7 @@ export class AdminModule {
     const exportRows = this.data.guests.map(g => ({
       "Vorname": g.firstName,
       "Initial / Nachname": g.lastNameInitial || "",
-      "Tisch": g.tableId.replace("tisch-", "").replace("-2", ""),
+      "Tisch": g.tableId === "tisch-1-2" ? "Braut-Tisch" : g.tableId.replace("tisch-", ""),
       "Sitzplatz": g.seat
     }));
 
@@ -59,17 +59,38 @@ export class AdminModule {
       const arrayBuffer = new Uint8Array(e.target.result);
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
 
       if (jsonData.length === 0) return alert("Die hochgeladene Datei enthält keine Daten.");
 
-      this.data.guests = jsonData.map((row, idx) => ({
-        id: `g_${idx + 1}`,
-        firstName: row["Vorname"] || row["Name"] || "Gast",
-        lastNameInitial: row["Initial / Nachname"] || row["Initial"] || "",
-        tableId: `tisch-${row["Tisch"]?.toString().replace(/\D/g, '')}`,
-        seat: parseInt(row["Sitzplatz"]) || 1
-      }));
+      this.data.guests = jsonData.map((row, idx) => {
+        // Robuste Ermittlung der Schlüsselwerte unabhängig von exakter Schreibweise
+        const keys = Object.keys(row);
+        
+        const findVal = (possibleNames) => {
+          const matchKey = keys.find(k => possibleNames.some(p => k.toLowerCase().trim().includes(p)));
+          return matchKey ? row[matchKey] : "";
+        };
+
+        const firstName = findVal(["vorname", "first", "name", "gast"]) || `Gast ${idx + 1}`;
+        const lastNameInitial = findVal(["initial", "nachname", "last"]) || "";
+        let rawTable = findVal(["tisch", "table"])?.toString().trim() || "1";
+        const rawSeat = findVal(["sitz", "platz", "seat"]) || (idx + 1);
+
+        // Zuweisung des Brauttischs (1, 2 oder "Braut-Tisch") bzw. der Tische 3-20
+        let tableId = `tisch-${rawTable.replace(/\D/g, '')}`;
+        if (rawTable.toLowerCase().includes("braut") || rawTable === "1" || rawTable === "2" || rawTable === "1-2" || rawTable === "1/2") {
+          tableId = "tisch-1-2";
+        }
+
+        return {
+          id: `g_${idx + 1}`,
+          firstName: firstName.toString().trim(),
+          lastNameInitial: lastNameInitial.toString().trim(),
+          tableId: tableId,
+          seat: parseInt(rawSeat) || (idx + 1)
+        };
+      });
 
       localStorage.setItem('wedding_guests_custom', JSON.stringify(this.data.guests));
       alert(`${this.data.guests.length} Gäste erfolgreich importiert!`);
@@ -89,10 +110,12 @@ export class AdminModule {
 
     this.data.guests.forEach((g, idx) => {
       const tr = document.createElement('tr');
+      const displayTable = g.tableId === 'tisch-1-2' ? 'Braut-Tisch' : g.tableId.replace('tisch-', 'Tisch ');
+
       tr.innerHTML = `
         <td>${g.firstName}</td>
         <td>${g.lastNameInitial || '-'}</td>
-        <td>${g.tableId.replace('tisch-', 'Tisch ')}</td>
+        <td>${displayTable}</td>
         <td>${g.seat}</td>
         <td><button class="btn-secondary" style="padding:0.2rem 0.5rem; font-size:0.75rem;" data-idx="${idx}">Löschen</button></td>
       `;
