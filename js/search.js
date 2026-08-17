@@ -1,14 +1,13 @@
-// Vornamen-Suche mit Mehrfachauswahl-Popup
 export class SearchModule {
-  constructor(guests, onSelectGuest) {
+  constructor(guests, onSelect) {
     this.guests = guests;
-    this.onSelectGuest = onSelectGuest;
-    this.input = document.getElementById('search-input');
-    this.resultsContainer = document.getElementById('search-results');
+    this.onSelect = onSelect;
+    this.searchInput = document.getElementById('search-input');
+    this.resultsDropdown = document.getElementById('search-results');
+    
     this.dialog = document.getElementById('disambiguation-dialog');
     this.dialogList = document.getElementById('disambiguation-list');
-    this.closeBtn = document.getElementById('disambiguation-close-btn');
-
+    
     this.init();
   }
 
@@ -17,67 +16,66 @@ export class SearchModule {
   }
 
   init() {
-    this.input.addEventListener('input', () => this.handleSearch());
-    this.closeBtn.addEventListener('click', () => this.dialog.close());
-  }
+    this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+    
+    document.getElementById('disambiguation-close-btn')?.addEventListener('click', () => {
+      this.dialog.close();
+    });
 
-  handleSearch() {
-    const query = this.input.value.trim().toLowerCase();
-    this.resultsContainer.innerHTML = '';
-
-    if (query.length < 1) return;
-
-    // Filter auf Vornamen
-    const matches = this.guests.filter(g => 
-      g.firstName.toLowerCase().startsWith(query) ||
-      g.firstName.toLowerCase().includes(query)
-    );
-
-    matches.forEach(guest => {
-      const item = document.createElement('div');
-      item.className = 'result-item';
-      item.innerHTML = `<span><strong>${guest.firstName}</strong> ${guest.lastNameInitial || ''}</span> <small style="color:#888;">Suchen</small>`;
-      
-      item.addEventListener('click', () => this.processSelection(guest.firstName));
-      this.resultsContainer.appendChild(item);
+    document.addEventListener('click', (e) => {
+      if (!this.searchInput.contains(e.target) && !this.resultsDropdown.contains(e.target)) {
+        this.resultsDropdown.innerHTML = '';
+      }
     });
   }
 
-  processSelection(firstName) {
-    this.resultsContainer.innerHTML = '';
-    
-    const matches = this.guests.filter(g => g.firstName.toLowerCase() === firstName.toLowerCase());
+  handleSearch(query) {
+    this.resultsDropdown.innerHTML = '';
+    if (query.trim().length < 2) return;
 
-    if (matches.length > 1) {
-      this.showDisambiguationModal(matches);
-    } else if (matches.length === 1) {
-      this.input.value = `${matches[0].firstName} ${matches[0].lastNameInitial || ''}`.trim();
-      this.onSelectGuest(matches[0]);
-    }
+    const lowerQuery = query.toLowerCase().trim();
+    const matches = this.guests.filter(g => 
+      g.firstName.toLowerCase().startsWith(lowerQuery) || 
+      `${g.firstName} ${g.lastNameInitial}`.toLowerCase().startsWith(lowerQuery)
+    );
+
+    matches.slice(0, 10).forEach(guest => {
+      const item = document.createElement('div');
+      item.className = 'result-item';
+      item.innerText = `${guest.firstName} ${guest.lastNameInitial || ''}`.trim();
+      
+      item.addEventListener('click', () => {
+        this.resultsDropdown.innerHTML = '';
+        this.searchInput.value = item.innerText;
+
+        const exactMatches = this.guests.filter(g => g.firstName.toLowerCase() === guest.firstName.toLowerCase());
+
+        if (exactMatches.length > 1) {
+          this.showDisambiguation(exactMatches);
+        } else {
+          this.onSelect(guest);
+        }
+      });
+      
+      this.resultsDropdown.appendChild(item);
+    });
   }
 
-  showDisambiguationModal(matches) {
+  showDisambiguation(guests) {
     this.dialogList.innerHTML = '';
-
-    matches.forEach(guest => {
+    guests.forEach(guest => {
       const btn = document.createElement('button');
       btn.className = 'btn-creme';
       btn.style.width = '100%';
-      btn.style.marginBottom = '0.6rem';
-      btn.style.padding = '0.8rem';
-      
-      const tableName = guest.tableId.replace('tisch-', 'Tisch ').replace('-2', '');
-      btn.innerText = `${guest.firstName} ${guest.lastNameInitial || ''} (${tableName}, Sitz ${guest.seat})`;
+      btn.innerText = `${guest.firstName} ${guest.lastNameInitial || ''}`;
       
       btn.addEventListener('click', () => {
         this.dialog.close();
-        this.input.value = `${guest.firstName} ${guest.lastNameInitial || ''}`.trim();
-        this.onSelectGuest(guest);
+        this.onSelect(guest);
       });
-
+      
       this.dialogList.appendChild(btn);
     });
-
     this.dialog.showModal();
   }
 }

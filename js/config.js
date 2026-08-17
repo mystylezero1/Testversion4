@@ -1,22 +1,19 @@
 export const CONFIG = {
+  baseUrl: 'https://mystylezero1.github.io/Sitzplan/',
   names: {
-    bride: "Anja",
-    groom: "Dino"
+    bride: 'Anja',
+    groom: 'Dino'
   },
-  welcomeTitle: "Herzlich willkommen zur Hochzeit von Anja & Dino!",
-  welcomeSubtitle: "Schön, dass du da bist. Finde hier deinen Sitzplatz!",
-  
-  // Geheimer URL-Parameter (?admin=true)
-  adminUrlParam: "admin",
-  adminUrlValue: "true",
-  
-  photoAlbumUrl: "https://photos.google.com",
-  colors: {
-    gold: "#D4AF37",
-    goldLight: "#F4E8C1",
-    goldDark: "#A38018",
-    creme: "#FAF7F2",
-    white: "#FFFFFF",
-    dark: "#2A2A2A"
+  photoAlbumUrl: 'https://app.mymillionsnaps.de/f71210da-70bf-4078-ab79-992de5e2316e/pictures',
+  adminUrlParam: 'admin',
+  adminUrlValue: 'true',
+  adminPin: '1234', // Standard PIN - kann geändert werden
+  features: {
+    guestNotes: true, // Gästehinweise (Allergien, Essenspräferenzen, Notizen)
+    speechGreeting: true, // Sprachbegrüßung beim Gast finden
+    confettiAnimation: true, // Konfetti-Animation
+    toiletToggle: true, // WC-Anzeige Umschalter
+    darkMode: false, // Dark Mode standardmäßig aus
+    undoDelete: true // Undo-Funktion für Löschen
   }
 };
